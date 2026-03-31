@@ -3,258 +3,150 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DM Publisher Health Check</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
+<title>Duration Media — Debug Log Analyzer</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #ffffff;
+    background: #f5f5f3;
     color: #1a1a18;
     min-height: 100vh;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+    padding: 2rem 1rem;
   }
 
-  /* ── Header ── */
-  .header {
-    background: #0f0f0e;
-    padding: 0 2rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .logo-mark {
-    width: 28px;
-    height: 28px;
-    background: #ffffff;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: #0f0f0e;
-    letter-spacing: -0.5px;
-    flex-shrink: 0;
-  }
-
-  .header-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: #ffffff;
-    letter-spacing: 0.01em;
-  }
-
-  .header-divider {
-    width: 1px;
-    height: 18px;
-    background: #333;
-  }
-
-  .header-sub {
-    font-size: 12px;
-    color: #666;
-  }
-
-  .header-badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #888;
-    border: 0.5px solid #333;
-    padding: 2px 8px;
-    border-radius: 3px;
-  }
-
-  /* ── Body ── */
-  .body {
-    padding: 1.5rem 2rem 2rem;
-    max-width: 1100px;
+  .container {
+    max-width: 860px;
     margin: 0 auto;
   }
 
-  /* ── Input section ── */
-  .input-section {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-    align-items: start;
+  .top-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.75rem;
   }
 
-  .input-panel {
-    background: #fafaf9;
-    border: 0.5px solid #e0e0de;
-    border-radius: 10px;
-    padding: 1.25rem;
-  }
-
-  .input-label {
-    font-size: 12px;
+  .logo-pill {
+    background: #1a1a18;
+    color: #fff;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
     text-transform: uppercase;
-    color: #999;
-    margin-bottom: 10px;
+  }
+
+  .top-bar h1 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #1a1a18;
+  }
+
+  .top-bar p {
+    font-size: 13px;
+    color: #888;
+    margin-left: auto;
+  }
+
+  .input-card {
+    background: #fff;
+    border: 0.5px solid #ddd;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .input-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
   }
 
   textarea {
     width: 100%;
-    height: 180px;
+    height: 160px;
     font-family: "SF Mono", "Fira Code", Consolas, monospace;
     font-size: 11px;
-    line-height: 1.65;
+    line-height: 1.6;
     padding: 10px 12px;
     border: 0.5px solid #ddd;
-    border-radius: 7px;
-    background: #ffffff;
+    border-radius: 8px;
+    background: #fafafa;
     color: #1a1a18;
     resize: vertical;
   }
 
   textarea:focus {
     outline: none;
-    border-color: #aaa;
+    border-color: #999;
+    background: #fff;
   }
 
   .btn-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 10px;
+    gap: 10px;
+    margin-top: 12px;
   }
 
   button.primary {
-    padding: 8px 22px;
+    padding: 8px 20px;
     font-size: 13px;
     font-weight: 500;
-    background: #0f0f0e;
+    background: #1a1a18;
     color: #fff;
     border: none;
-    border-radius: 7px;
+    border-radius: 8px;
     cursor: pointer;
     transition: opacity 0.15s;
   }
 
-  button.primary:hover { opacity: 0.8; }
+  button.primary:hover { opacity: 0.85; }
   button.primary:active { transform: scale(0.98); }
 
-  button.ghost {
+  button.secondary {
     padding: 8px 16px;
     font-size: 13px;
-    color: #666;
+    color: #555;
     background: transparent;
-    border: 0.5px solid #ddd;
-    border-radius: 7px;
+    border: 0.5px solid #ccc;
+    border-radius: 8px;
     cursor: pointer;
   }
 
-  button.ghost:hover { background: #f0f0ee; }
+  button.secondary:hover { background: #f5f5f3; }
 
-  .input-hint {
-    font-size: 11px;
-    color: #bbb;
-    margin-left: 4px;
-  }
-
-  /* ── How to panel ── */
-  .howto-panel {
-    background: #fafaf9;
-    border: 0.5px solid #e0e0de;
-    border-radius: 10px;
-    padding: 1.25rem;
-  }
-
-  .howto-title {
+  .hint {
     font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #999;
-    margin-bottom: 12px;
+    color: #aaa;
+    margin-left: auto;
   }
 
-  .step {
+  .results-area { margin-top: 0; }
+
+  .pub-info {
     display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-    align-items: flex-start;
-  }
-
-  .step-num {
-    width: 20px;
-    height: 20px;
-    background: #0f0f0e;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 10px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .step-text {
-    font-size: 12px;
-    color: #555;
-    line-height: 1.6;
-  }
-
-  .step-text code {
-    background: #efefed;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: monospace;
-    font-size: 11px;
-    color: #333;
-  }
-
-  .step-text strong {
-    color: #1a1a18;
-    font-weight: 500;
-  }
-
-  /* ── Results ── */
-  .results { margin-top: 0; }
-
-  /* publisher bar */
-  .pub-bar {
-    display: flex;
-    align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-    padding: 10px 0;
-    border-bottom: 0.5px solid #efefed;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
   }
 
-  .pub-chip {
+  .pub-tag {
     font-size: 12px;
-    background: #f5f5f3;
-    border: 0.5px solid #e0e0de;
+    background: #fff;
+    border: 0.5px solid #ddd;
     border-radius: 4px;
     padding: 3px 9px;
     color: #888;
   }
 
-  .pub-chip span { color: #1a1a18; font-weight: 500; }
-  .pub-chip.good { background: #E1F5EE; border-color: #9FE1CB; color: #085041; }
+  .pub-tag span { color: #1a1a18; font-weight: 500; }
+  .pub-tag.ok { color: #1D9E75; border-color: #9FE1CB; background: #E1F5EE; }
 
-  /* stats row */
   .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -262,220 +154,190 @@
     margin-bottom: 1.25rem;
   }
 
-  .stat {
-    background: #fafaf9;
-    border: 0.5px solid #e0e0de;
-    border-radius: 10px;
-    padding: 16px 18px;
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .stat-label { font-size: 11px; color: #aaa; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500; }
-  .stat-value { font-size: 30px; font-weight: 500; color: #1a1a18; line-height: 1; }
+  .stat {
+    background: #fff;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .stat-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+  .stat-value { font-size: 26px; font-weight: 500; color: #1a1a18; }
   .stat-value.good { color: #1D9E75; }
   .stat-value.warn { color: #BA7517; }
   .stat-value.bad { color: #E24B4A; }
 
-  /* two-col layout for findings + slots */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
+  .section { margin-bottom: 1.25rem; }
 
-  @media (max-width: 700px) {
-    .two-col { grid-template-columns: 1fr; }
-    .input-section { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  .panel {
-    background: #fafaf9;
-    border: 0.5px solid #e0e0de;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .panel-header {
-    padding: 10px 14px;
-    border-bottom: 0.5px solid #e0e0de;
+  .section-title {
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: #aaa;
-    background: #fff;
+    margin-bottom: 8px;
   }
 
-  .panel-body { padding: 12px 14px; }
-
-  /* flags */
   .flag {
     display: flex;
     gap: 10px;
-    padding: 9px 12px;
-    border-radius: 7px;
+    padding: 10px 14px;
+    border-radius: 8px;
     margin-bottom: 8px;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.6;
   }
 
-  .flag:last-child { margin-bottom: 0; }
   .flag-bad { background: #FCEBEB; color: #791F1F; border-left: 3px solid #E24B4A; }
   .flag-warn { background: #FAEEDA; color: #633806; border-left: 3px solid #BA7517; }
   .flag-good { background: #E1F5EE; color: #085041; border-left: 3px solid #1D9E75; }
 
-  /* slot cards */
-  .slot-item {
-    padding: 10px 0;
-    border-bottom: 0.5px solid #efefed;
+  .slot-card {
+    background: #fff;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
   }
 
-  .slot-item:last-child { border-bottom: none; }
-
-  .slot-row {
+  .slot-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 6px;
+    margin-bottom: 12px;
   }
 
-  .slot-name { font-size: 13px; font-weight: 500; color: #1a1a18; }
+  .slot-name { font-size: 14px; font-weight: 500; }
 
   .badge {
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 4px;
   }
 
   .badge-good { background: #E1F5EE; color: #0F6E56; }
   .badge-warn { background: #FAEEDA; color: #854F0B; }
   .badge-bad { background: #FCEBEB; color: #A32D2D; }
-  .badge-neutral { background: #f0f0ee; color: #777; }
+  .badge-neutral { background: #f0f0ee; color: #666; }
 
-  .slot-meta {
-    display: flex;
-    gap: 16px;
+  .slot-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
   }
 
-  .slot-meta-item { font-size: 11px; color: #aaa; }
-  .slot-meta-item span { color: #555; font-weight: 500; }
+  .slot-metric-label { font-size: 11px; color: #aaa; margin-bottom: 2px; }
+  .slot-metric-value { font-size: 13px; font-weight: 500; color: #1a1a18; }
 
-  /* timeline */
-  .timeline-panel {
-    background: #fafaf9;
-    border: 0.5px solid #e0e0de;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-  }
-
-  .timeline-scroll {
-    max-height: 260px;
-    overflow-y: auto;
+  .events-card {
     background: #fff;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
   }
 
-  .ev-row {
+  .events-scroll {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+
+  .event-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
-    padding: 5px 14px;
-    border-bottom: 0.5px solid #f5f5f3;
+    padding: 5px 16px;
+    border-bottom: 0.5px solid #f0f0ee;
+    font-size: 12px;
+  }
+
+  .event-row:last-child { border-bottom: none; }
+
+  .event-time {
+    font-family: monospace;
+    color: #bbb;
+    min-width: 40px;
     font-size: 11px;
   }
 
-  .ev-row:last-child { border-bottom: none; }
-  .ev-row:hover { background: #fafaf9; }
-
-  .ev-time { font-family: monospace; color: #ccc; min-width: 38px; }
-
-  .ev-type {
-    font-weight: 700;
-    font-size: 10px;
+  .event-type {
+    font-weight: 600;
+    font-size: 11px;
+    min-width: 72px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    min-width: 68px;
+    letter-spacing: 0.04em;
   }
 
-  .ev-type.detected { color: #1D9E75; }
-  .ev-type.eligible { color: #185FA5; }
-  .ev-type.check { color: #BA7517; }
-  .ev-type.fail { color: #E24B4A; }
-  .ev-type.info { color: #ccc; }
+  .event-type.detected { color: #1D9E75; }
+  .event-type.eligible { color: #185FA5; }
+  .event-type.check { color: #BA7517; }
+  .event-type.fail { color: #E24B4A; }
+  .event-type.info { color: #aaa; }
 
-  .ev-detail { color: #999; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-  .ev-slot { color: #1a1a18; font-weight: 600; }
+  .event-detail {
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    font-size: 11px;
+  }
 
-  .empty-state {
+  .event-slot { color: #1a1a18; font-weight: 500; }
+
+  .empty {
+    background: #fff;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 2rem;
     text-align: center;
-    padding: 3rem 2rem;
-    color: #bbb;
+    color: #aaa;
     font-size: 13px;
-    line-height: 1.8;
+    line-height: 1.7;
   }
 
-  .empty-state strong { color: #888; display: block; font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .footer {
+    margin-top: 2rem;
+    font-size: 12px;
+    color: #bbb;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
+<div class="container">
 
-<div class="header">
-  <div class="header-left">
-    <div class="logo-mark">DM</div>
-    <div class="header-divider"></div>
-    <div class="header-title">Publisher Health Check</div>
-    <div class="header-divider"></div>
-    <div class="header-sub">Ad stack diagnostics via <code style="font-size:11px;color:#888">?dm_debug</code></div>
+  <div class="top-bar">
+    <div class="logo-pill">Duration Media</div>
+    <h1>Debug Log Analyzer</h1>
+    <p>v1.0 — internal tool</p>
   </div>
-  <div class="header-badge">Internal Tool &nbsp;·&nbsp; v1.0</div>
-</div>
 
-<div class="body">
+  <div class="input-card">
+    <label>Paste console output from a <code>?dm_debug</code> session</label>
+    <textarea id="logInput" placeholder="Open DevTools → Console, filter by 'DM', select all and paste here.
 
-  <div class="input-section">
-    <div class="input-panel">
-      <div class="input-label">Console output</div>
-      <textarea id="logInput" placeholder="Open DevTools → Console on any publisher page loaded with ?dm_debug. Filter by 'DM', select all, copy and paste here.
+Example:
+dm.js:1 dm:: 5:23:49 PM config {publisherId: '1000277', sites: Array(205)}
+dm.js:1 dm:: 5:23:51 PM SLOT_DETECTED :: {&quot;slotId&quot;:&quot;r89-desktop-hpa-atf&quot;,&quot;siteId&quot;:&quot;12026&quot;,...}
+dm.js:1 dm:: 5:23:54 PM SLOT_OVERTAKE_ELIGIBLE :: {...}
 
-Full or filtered output both work — the tool extracts Duration Media events automatically."></textarea>
-      <div class="btn-row">
-        <button class="primary" id="runBtn">Run health check</button>
-        <button class="ghost" id="clearBtn">Clear</button>
-        <span class="input-hint">Filtered (DM) or full console output</span>
-      </div>
-    </div>
-
-    <div class="howto-panel">
-      <div class="howto-title">How to capture</div>
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-text">Navigate to any publisher domain and append <code>?dm_debug</code> to the URL</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-text">Open DevTools → <strong>Console</strong> tab</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-text">Filter by <code>DM</code> in the console filter bar</div>
-      </div>
-      <div class="step">
-        <div class="step-num">4</div>
-        <div class="step-text">Wait <strong>2–3 minutes</strong> for auctions to run</div>
-      </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-text">Select all console output, copy, and paste into this tool</div>
-      </div>
+You can also paste unfiltered full console output — the tool will extract Duration Media events automatically."></textarea>
+    <div class="btn-row">
+      <button class="primary" onclick="analyze()">Analyze</button>
+      <button class="secondary" onclick="clearAll()">Clear</button>
+      <span class="hint">Works with filtered (DM) or full console output</span>
     </div>
   </div>
 
-  <div id="results"></div>
+  <div id="results" class="results-area"></div>
 
+  <div class="footer">Duration Media — internal ops tool &nbsp;·&nbsp; not for external distribution</div>
 </div>
 
 <script>
@@ -500,12 +362,13 @@ function relTime(t, base) {
 
 function tryParseJSON(str) {
   try {
-    return JSON.parse(str.replace(/&quot;/g, '"').replace(/&amp;/g, '&'));
-  } catch(e) {
+    const s = str.replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+    return JSON.parse(s);
+  } catch (e) {
     try {
       const inner = str.match(/\{[^{}]+\}/);
       if (inner) return JSON.parse(inner[0].replace(/&quot;/g, '"'));
-    } catch(e2) {}
+    } catch (e2) {}
   }
   return null;
 }
@@ -535,23 +398,36 @@ function analyze() {
 
     const rest = line.replace(/.*?dm::/, '').replace(/\d+:\d+:\d+\s*(?:AM|PM)?\s*/i, '').trim();
 
-    if (rest.includes('config {')) { const pm = rest.match(/publisherId['":\s]+['"]?(\d+)/); if (pm) publisher = pm[1]; }
-    if (rest.startsWith('hostname:')) hostname = rest.replace('hostname:', '').trim();
-    if (rest.startsWith('SCRIPT_LOADED')) { const d = tryParseJSON(rest.replace('SCRIPT_LOADED ::', '').trim()); if (d) { siteId = d.siteId; scriptVersion = d.version; } }
+    if (rest.includes('config {')) {
+      const pm = rest.match(/publisherId['":\s]+['"]?(\d+)/);
+      if (pm) publisher = pm[1];
+    }
+    if (rest.startsWith('hostname:')) {
+      hostname = rest.replace('hostname:', '').trim();
+    }
+    if (rest.startsWith('SCRIPT_LOADED')) {
+      const d = tryParseJSON(rest.replace('SCRIPT_LOADED ::', '').trim());
+      if (d) { siteId = d.siteId; scriptVersion = d.version; }
+    }
     if (rest.includes('IP_ALLOWED')) ipAllowed = true;
     if (rest.includes('COUNTRY_ALLOWED')) countryAllowed = true;
 
-    const isRelevant = rest.includes('SLOT_DETECTED') || rest.includes('SLOT_OVERTAKE') ||
-      rest.includes('SPONSORSHIP') || rest.includes('Slot response received') ||
-      rest.includes('Ignoring non standard') || rest.includes('Publisher refresh') || rest.includes('slotRenderEnded');
+    const isRelevant = rest.includes('SLOT_DETECTED') ||
+      rest.includes('SLOT_OVERTAKE') ||
+      rest.includes('SPONSORSHIP') ||
+      rest.includes('Slot response received') ||
+      rest.includes('Ignoring non standard') ||
+      rest.includes('Publisher refresh') ||
+      rest.includes('slotRenderEnded');
+
     if (!isRelevant) continue;
 
-    const ev = { raw: rest, time: t, rel: relTime(t, baseTime) };
+    const ev = { raw: rest, time: t, rel: relTime(t, baseTime), ts };
 
     if (rest.includes('SLOT_DETECTED')) {
       ev.type = 'detected';
       const d = tryParseJSON(rest.replace('SLOT_DETECTED ::', '').trim());
-      if (d) { ev.slotId = d.slotId; ev.size = d.adWidth + 'x' + d.adHeight; }
+      if (d) { ev.slotId = d.slotId; ev.size = d.adWidth + 'x' + d.adHeight; ev.lid = d.lid; }
     } else if (rest.includes('SLOT_OVERTAKE_ELIGIBLE')) {
       ev.type = 'eligible';
       const d = tryParseJSON(rest.replace('SLOT_OVERTAKE_ELIGIBLE ::', '').trim());
@@ -559,44 +435,62 @@ function analyze() {
     } else if (rest.includes('SLOT_OVERTAKE_FAILED_NO_UNIT')) {
       ev.type = 'fail';
       const d = tryParseJSON(rest.replace('SLOT_OVERTAKE_FAILED_NO_UNIT ::', '').trim());
-      if (d) { ev.slotId = d.slotId; ev.size = d.adWidth + 'x' + d.adHeight; }
-      ev.detail = 'No unit — no active campaign for this slot';
+      if (d) { ev.slotId = d.slotId; ev.size = d.adWidth + 'x' + d.adHeight; ev.detail = 'No unit — no active campaign for this slot'; }
     } else if (rest.includes('SLOT_SPONSORSHIP_CHECK') || rest.includes('[SPONSORSHIP]')) {
       ev.type = 'check';
+      const sm = rest.match(/\[([^\]]+)\]/g);
+      if (sm && sm.length > 1) ev.checkSlots = sm[1].replace(/[\[\]]/g, '').split(',').map(s => s.trim());
       ev.detail = rest.includes('Processing result') ? rest.replace(/.*\[SPONSORSHIP\]\s*/, '').trim() : 'sponsorship check';
     } else if (rest.includes('Slot response received')) {
       ev.type = 'info';
-      const sm = rest.match(/for\s+([\w-]+)/); if (sm) ev.slotId = sm[1];
+      const sm = rest.match(/for\s+([\w-]+)/);
+      if (sm) ev.slotId = sm[1];
       const rm = rest.match(/response:\s*(\w+)/);
       ev.detail = rm ? 'GAM response: ' + rm[1] : 'slot response';
     } else if (rest.includes('Ignoring non standard size')) {
       ev.type = 'fail';
-      const sm = rest.match(/([\w-]+)\s+Ignoring/); if (sm) ev.slotId = sm[1];
-      const szm = rest.match(/size\s+([\dx]+)/i); if (szm) ev.size = szm[1];
+      const sm = rest.match(/([\w-]+)\s+Ignoring/);
+      if (sm) ev.slotId = sm[1];
+      const szm = rest.match(/size\s+([\dx]+)/i);
+      if (szm) ev.size = szm[1];
       ev.detail = 'non-standard size — cannot overtake';
     } else if (rest.includes('Publisher refresh')) {
       ev.type = 'info';
-      const sm = rest.match(/for slot:\s+([\w-]+)/); if (sm) ev.slotId = sm[1];
+      const sm = rest.match(/for slot:\s+([\w-]+)/);
+      if (sm) ev.slotId = sm[1];
       ev.detail = 'publisher refresh';
+    } else if (rest.includes('slotRenderEnded')) {
+      ev.type = 'info';
+      const sm = rest.match(/slotRenderEnded:\s+([\w-]+)/);
+      if (sm) ev.slotId = sm[1];
+      ev.detail = 'slot rendered';
     } else {
       ev.type = 'info';
       ev.detail = rest.substring(0, 80);
     }
 
-    if (ev.slotId && !slots[ev.slotId]) slots[ev.slotId] = { id: ev.slotId, detected: false, eligible: false, failCount: 0, refreshCount: 0, nonStdSizes: [] };
+    if (ev.slotId && !slots[ev.slotId]) {
+      slots[ev.slotId] = { id: ev.slotId, events: [], detected: false, eligible: false, failCount: 0, refreshCount: 0, nonStdSizes: [], renderCount: 0 };
+    }
     if (ev.slotId && slots[ev.slotId]) {
       const sl = slots[ev.slotId];
-      if (ev.type === 'detected') { sl.detected = true; sl.size = ev.size; }
+      sl.events.push(ev);
+      if (ev.type === 'detected') { sl.detected = true; sl.size = ev.size; sl.lid = ev.lid; }
       if (ev.type === 'eligible') sl.eligible = true;
-      if (ev.type === 'fail' && ev.detail && ev.detail.includes('non-standard')) sl.nonStdSizes.push(ev.size);
+      if (ev.type === 'fail' && ev.size && ev.detail && ev.detail.includes('non-standard')) sl.nonStdSizes.push(ev.size);
       if (ev.type === 'fail' && ev.detail && ev.detail.includes('No unit')) sl.failCount++;
       if (ev.detail && ev.detail.includes('refresh')) sl.refreshCount++;
+      if (ev.detail && ev.detail.includes('rendered')) sl.renderCount++;
     }
     events.push(ev);
   }
 
   if (events.length === 0 && !publisher && !hostname) {
-    document.getElementById('results').innerHTML = `<div class="empty-state"><strong>No Duration Media events found</strong>Make sure you are pasting console output from a page loaded with ?dm_debug and that the dm.js script is present on the publisher site.</div>`;
+    document.getElementById('results').innerHTML = `
+      <div class="empty">
+        No Duration Media log lines found.<br>
+        Open DevTools → Console, filter by <strong>DM</strong>, select all, copy, and paste here.
+      </div>`;
     return;
   }
 
@@ -608,24 +502,24 @@ function analyze() {
 
   let flags = [];
   if (!ipAllowed && (publisher || hostname)) flags.push({ level: 'bad', text: 'IP not allowed — this publisher may be blocked. Confirm IP allow-listing in the Duration platform.' });
-  if (!countryAllowed && (publisher || hostname)) flags.push({ level: 'bad', text: 'Country not allowed — traffic geo is outside Duration Media\'s active zones for this publisher.' });
-  if (nonStdSlots.length > 0) flags.push({ level: 'warn', text: 'Non-standard sizes on ' + nonStdSlots.length + ' slot(s): ' + nonStdSlots.map(s => s.id + ' — ' + [...new Set(s.nonStdSizes)].join(', ')).join('; ') + '. Duration requires standard IAB sizes to overtake.' });
+  if (!countryAllowed && (publisher || hostname)) flags.push({ level: 'bad', text: 'Country not allowed — traffic geo may be outside Duration Media\'s active zones for this publisher.' });
+  if (nonStdSlots.length > 0) flags.push({ level: 'warn', text: 'Non-standard ad sizes detected on ' + nonStdSlots.length + ' slot(s): ' + nonStdSlots.map(s => s.id + ' — ' + [...new Set(s.nonStdSizes)].join(', ')).join('; ') + '. Duration requires standard IAB sizes (300x250, 728x90, 160x600, etc.) to overtake.' });
   if (failedSlots.length > 0) flags.push({ level: 'bad', text: 'Overtake failed (No Unit) on ' + failedSlots.length + ' slot(s): ' + failedSlots.map(s => s.id).join(', ') + '. No active sponsorship or campaign is configured for this publisher/slot.' });
-  if (eligibleSlots.length > 0) flags.push({ level: 'good', text: eligibleSlots.length + ' slot(s) overtake-eligible: ' + eligibleSlots.map(s => s.id + (s.size ? ' (' + s.size + ')' : '')).join(', ') + '. Duration Media can serve on this publisher.' });
-  if (detectedSlots.length === 0 && events.length > 0) flags.push({ level: 'warn', text: 'No slots detected. Script may have loaded but no GAM slots match the configured criteria.' });
-  if (ipAllowed && countryAllowed && eligibleSlots.length === 0 && detectedSlots.length > 0 && failedSlots.length === 0) flags.push({ level: 'warn', text: 'Script loaded and slots found, but none are overtake-eligible. Check campaign targeting or sponsorship configuration in the Duration platform.' });
+  if (eligibleSlots.length > 0) flags.push({ level: 'good', text: eligibleSlots.length + ' slot(s) marked overtake-eligible: ' + eligibleSlots.map(s => s.id + (s.size ? ' (' + s.size + ')' : '')).join(', ') + '. Duration Media can serve on this publisher.' });
+  if (detectedSlots.length === 0 && events.length > 0) flags.push({ level: 'warn', text: 'No slots detected by Duration Media. The script may have loaded but no GAM slots match the configured criteria.' });
+  if (ipAllowed && countryAllowed && eligibleSlots.length === 0 && detectedSlots.length > 0 && failedSlots.length === 0) flags.push({ level: 'warn', text: 'Script loaded and slots found, but none were overtake-eligible. Check campaign targeting, floor prices, or sponsorship configuration in the Duration platform.' });
 
   let html = '';
 
-  // Publisher bar
+  // Publisher info bar
   if (publisher || hostname) {
-    html += '<div class="pub-bar">';
-    if (hostname) html += `<div class="pub-chip">domain <span>${hostname}</span></div>`;
-    if (publisher) html += `<div class="pub-chip">publisher ID <span>${publisher}</span></div>`;
-    if (siteId) html += `<div class="pub-chip">site ID <span>${siteId}</span></div>`;
-    if (scriptVersion) html += `<div class="pub-chip">script <span>v${scriptVersion}</span></div>`;
-    if (ipAllowed) html += `<div class="pub-chip good">IP allowed</div>`;
-    if (countryAllowed) html += `<div class="pub-chip good">country allowed</div>`;
+    html += '<div class="pub-info">';
+    if (hostname) html += `<div class="pub-tag">domain: <span>${hostname}</span></div>`;
+    if (publisher) html += `<div class="pub-tag">publisher ID: <span>${publisher}</span></div>`;
+    if (siteId) html += `<div class="pub-tag">site ID: <span>${siteId}</span></div>`;
+    if (scriptVersion) html += `<div class="pub-tag">script: <span>v${scriptVersion}</span></div>`;
+    if (ipAllowed) html += `<div class="pub-tag ok">IP allowed</div>`;
+    if (countryAllowed) html += `<div class="pub-tag ok">country allowed</div>`;
     html += '</div>';
   }
 
@@ -637,78 +531,59 @@ function analyze() {
     <div class="stat"><div class="stat-label">Sponsorship checks</div><div class="stat-value">${checks}</div></div>
   </div>`;
 
-  // Two col: findings + slots
-  const slotList = Object.values(slots);
-  html += '<div class="two-col">';
-
   // Findings
-  html += '<div class="panel"><div class="panel-header">Findings</div><div class="panel-body">';
-  if (flags.length === 0) {
-    html += '<div style="font-size:13px;color:#bbb;padding:8px 0">No issues detected.</div>';
-  } else {
-    for (const f of flags) html += `<div class="flag flag-${f.level}">${f.text}</div>`;
+  if (flags.length > 0) {
+    html += '<div class="section"><div class="section-title">Findings</div>';
+    for (const f of flags) {
+      html += `<div class="flag flag-${f.level}">${f.text}</div>`;
+    }
+    html += '</div>';
   }
-  html += '</div></div>';
 
-  // Slots
-  html += '<div class="panel"><div class="panel-header">Slot breakdown</div><div class="panel-body">';
-  if (slotList.length === 0) {
-    html += '<div style="font-size:13px;color:#bbb;padding:8px 0">No slots observed.</div>';
-  } else {
+  // Slot breakdown
+  const slotList = Object.values(slots);
+  if (slotList.length > 0) {
+    html += '<div class="section"><div class="section-title">Slot breakdown</div>';
     for (const sl of slotList) {
       const status = sl.eligible ? 'Eligible' : sl.failCount > 0 ? 'No unit' : sl.nonStdSizes.length > 0 ? 'Size issue' : sl.detected ? 'Detected' : 'Observed';
       const bclass = sl.eligible ? 'badge-good' : sl.failCount > 0 ? 'badge-bad' : sl.nonStdSizes.length > 0 ? 'badge-warn' : 'badge-neutral';
-      html += `<div class="slot-item">
-        <div class="slot-row">
+      html += `<div class="slot-card">
+        <div class="slot-header">
           <div class="slot-name">${sl.id}</div>
           <div class="badge ${bclass}">${status}</div>
         </div>
-        <div class="slot-meta">
-          <div class="slot-meta-item">size <span>${sl.size || '—'}</span></div>
-          <div class="slot-meta-item">refreshes <span>${sl.refreshCount}</span></div>
-          <div class="slot-meta-item">non-std <span>${[...new Set(sl.nonStdSizes)].join(', ') || '—'}</span></div>
+        <div class="slot-grid">
+          <div><div class="slot-metric-label">Detected size</div><div class="slot-metric-value">${sl.size || '—'}</div></div>
+          <div><div class="slot-metric-label">Publisher refreshes</div><div class="slot-metric-value">${sl.refreshCount}</div></div>
+          <div><div class="slot-metric-label">Non-standard sizes</div><div class="slot-metric-value">${[...new Set(sl.nonStdSizes)].join(', ') || '—'}</div></div>
         </div>
       </div>`;
     }
+    html += '</div>';
   }
-  html += '</div></div>';
-  html += '</div>'; // end two-col
 
-  // Timeline
-  if (events.length > 0) {
-    html += '<div class="timeline-panel"><div class="panel-header">Event timeline</div><div class="timeline-scroll">';
-    for (const ev of events.slice(0, 120)) {
+  // Event timeline
+  const evList = events.slice(0, 100);
+  if (evList.length > 0) {
+    html += '<div class="section"><div class="section-title">Event timeline</div><div class="events-card"><div class="events-scroll">';
+    for (const ev of evList) {
       const label = { detected: 'Detected', eligible: 'Eligible', check: 'Check', fail: 'Failed', info: 'Info' }[ev.type] || ev.type;
-      const detail = ev.detail || ev.size || '';
-      const slotSpan = ev.slotId ? `<span class="ev-slot">${ev.slotId}</span> ` : '';
-      html += `<div class="ev-row"><span class="ev-time">+${ev.rel}</span><span class="ev-type ${ev.type}">${label}</span><span class="ev-detail">${slotSpan}${detail}</span></div>`;
+      const detail = ev.detail || (ev.size ? ev.size : '') || (ev.checkSlots ? ev.checkSlots.join(', ') : '');
+      const slotSpan = ev.slotId ? `<span class="event-slot">${ev.slotId}</span> ` : '';
+      html += `<div class="event-row">
+        <span class="event-time">+${ev.rel}</span>
+        <span class="event-type ${ev.type}">${label}</span>
+        <span class="event-detail">${slotSpan}${detail}</span>
+      </div>`;
     }
-    if (events.length > 120) html += `<div class="ev-row"><span class="ev-detail" style="color:#ccc;padding:4px 0">... ${events.length - 120} more events</span></div>`;
-    html += '</div></div>';
+    if (events.length > 100) {
+      html += `<div class="event-row"><span class="event-detail" style="padding:6px 0;color:#aaa">... and ${events.length - 100} more events (truncated for display)</span></div>`;
+    }
+    html += '</div></div></div>';
   }
 
   document.getElementById('results').innerHTML = html;
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // nudge ResizeObserver by dispatching a resize event
-  window.dispatchEvent(new Event('resize'));
 }
-}
-
-// Auto-resize for Google Sites iframe embed
-(function() {
-  function postHeight() {
-    const h = document.documentElement.scrollHeight;
-    window.parent.postMessage({ type: 'setHeight', height: h }, '*');
-  }
-  const ro = new ResizeObserver(postHeight);
-  ro.observe(document.body);
-  window.addEventListener('load', postHeight);
-})();
-
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('runBtn').addEventListener('click', analyze);
-  document.getElementById('clearBtn').addEventListener('click', clearAll);
-});
 </script>
 </body>
 </html>
