@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DM Publisher Health Check</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -442,8 +443,8 @@
 
 Full or filtered output both work — the tool extracts Duration Media events automatically."></textarea>
       <div class="btn-row">
-        <button class="primary" onclick="analyze()">Run health check</button>
-        <button class="ghost" onclick="clearAll()">Clear</button>
+        <button class="primary" id="runBtn">Run health check</button>
+        <button class="ghost" id="clearBtn">Clear</button>
         <span class="input-hint">Filtered (DM) or full console output</span>
       </div>
     </div>
@@ -703,6 +704,11 @@ function analyze() {
   ro.observe(document.body);
   window.addEventListener('load', postHeight);
 })();
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('runBtn').addEventListener('click', analyze);
+  document.getElementById('clearBtn').addEventListener('click', clearAll);
+});
 </script>
 </body>
 </html>
